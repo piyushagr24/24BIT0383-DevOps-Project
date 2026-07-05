@@ -1,39 +1,43 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_NAME = "devops-assignment"
+        CONTAINER_NAME = "devops-assignment"
+    }
+
     stages {
 
         stage('Checkout') {
             steps {
-                echo 'Repository checked out from GitHub'
+                echo 'Repository checked out successfully'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t devops-assignment .'
+                bat "docker build -t %IMAGE_NAME% ."
             }
         }
 
         stage('Run Docker Container') {
             steps {
-                bat '''
-                docker stop devops-assignment || ver > nul
-                docker rm devops-assignment || ver > nul
-                docker run -d -p 8081:80 --name devops-assignment devops-assignment
-                '''
+                bat """
+                docker stop %CONTAINER_NAME% || ver > nul
+                docker rm %CONTAINER_NAME% || ver > nul
+                docker run -d -p 8081:80 --name %CONTAINER_NAME% %IMAGE_NAME%
+                """
             }
         }
-
     }
 
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            echo 'Docker deployment completed successfully.'
         }
 
         failure {
-            echo 'Pipeline failed.'
+            echo 'Pipeline execution failed.'
         }
     }
 }
