@@ -5,7 +5,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git 'https://github.com/piyushagr24/devops-assignment.git'
+                git 'https://github.com/piyushagr24/24BIT0383-DevOps-Project'
             }
         }
 
