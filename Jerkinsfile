@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/piyushagr24/devops-assignment.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                bat 'docker build -t devops-assignment .'
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                bat '''
+                docker stop devops-assignment || exit 0
+                docker rm devops-assignment || exit 0
+                docker run -d -p 8081:80 --name devops-assignment devops-assignment
+                '''
+            }
+        }
+
+    }
+}
