@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         IMAGE_NAME = "devops-assignment"
-        CONTAINER_NAME = "devops-assignment"
     }
 
     stages {
@@ -20,20 +19,17 @@ pipeline {
             }
         }
 
-        stage('Run Docker Container') {
+        stage('Deploy to Kubernetes') {
             steps {
-                bat """
-                docker stop %CONTAINER_NAME% || ver > nul
-                docker rm %CONTAINER_NAME% || ver > nul
-                docker run -d -p 8081:80 --name %CONTAINER_NAME% %IMAGE_NAME%
-                """
+                bat 'kubectl apply -f deployment.yaml'
+                bat 'kubectl apply -f service.yaml'
             }
         }
     }
 
     post {
         success {
-            echo 'Docker deployment completed successfully.'
+            echo 'Application deployed successfully to Kubernetes.'
         }
 
         failure {
